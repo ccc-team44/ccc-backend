@@ -42,7 +42,7 @@ export const langCount = async (req: Request, res: Response) => {
 
 const handleDocs = async (classifiedDb: any, docs: any[]) => {
     return await Promise.all(docs.map(async doc=> {
-        await axios.post("http://localhost:13000/predict", `{ "instances": [ { "tweet": "${doc.doc.text}" }] }`,{
+        await axios.post("http://172.26.130.31:8502/predict", `{ "instances": [ { "tweet": "${doc.doc.text}" }] }`,{
             headers: { "Content-Type": "text/plain" }
         }).then(res=> {
             const highestScore = res.data?.predictions?.[0]?.scores?.sort?.()[2]
