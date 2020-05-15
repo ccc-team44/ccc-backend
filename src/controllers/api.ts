@@ -2,7 +2,7 @@
 
 import { Response, Request, NextFunction } from "express";
 import db, { nano } from "../db";
-
+import axios from "axios";
 /**
  * GET /api
  * List of API examples.
@@ -40,9 +40,19 @@ export const langCount = async (req: Request, res: Response) => {
     res.json(data);
 };
 
-const handleDocs = async (db, docs: any[]) => {
-    return await Promise.all(docs.map(doc=> {
-        return db.insert({...doc.doc, _id: doc.id}).catch(console.log)
+const handleDocs = async (db: any, docs: any[]) => {
+    return await Promise.all(docs.map(async doc=> {
+        await axios.post("http://localhost:13000/predict", `{ "instances": [ { "tweet": "${doc.doc.text}" }] }`,{
+            headers: { "Content-Type": "text/plain" }
+        }).then(res=> {
+            const highestScore = res.data?.predictions?.[0]?.scores?.sort?.()[2]
+            if(highestScore!== undefined){
+                const index = res.data.predictions[0].scores.indexOf(highestScore)
+                const tweetClass =  res.data.predictions[0].classes[index]
+                return db.insert({...doc.doc, _id: doc.id, tweetClass}).catch(()=>{});
+            }
+        });
+
     }));
 };
 
@@ -63,8 +73,9 @@ export const stream = async (req: Request, res: Response) => {
     console.log(startKey);
     const params = {
         include_docs: true,
-        limit: 10
-    };
+        limit: 10,
+        start_key_doc_id: undefined
+    } as  any;
 
     let i = 0;
     while(run)
@@ -90,7 +101,7 @@ export const stream = async (req: Request, res: Response) => {
 
           });
         if(docs)
-            await handleDocs(classifiedDb, docs)
+            await handleDocs(classifiedDb, docs);
     }
 
     res.json({});
