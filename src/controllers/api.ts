@@ -45,11 +45,9 @@ const handleDocs = async (classifiedDb: any, docs: any[]) => {
         await axios.post("http://172.26.130.31:8502/predict", `{ "instances": [ { "tweet": "${doc.doc.text}" }] }`,{
             headers: { "Content-Type": "text/plain" }
         }).then(res=> {
-            const highestScore = res.data?.predictions?.[0]?.scores?.sort?.()[2]
-            if(highestScore!== undefined){
-                const index = res.data.predictions[0].scores.indexOf(highestScore)
-                const tweetClass =  res.data.predictions[0].classes[index]
-                const newDoc = {...doc.doc, _id: doc.id, tweetClass}
+            const predictions = res?.data?.predictions
+            if(predictions!== undefined){
+                const newDoc = {...doc.doc, _id: doc.id, predictions}
                 delete newDoc._rev
                 return classifiedDb.insert(newDoc).catch(console.log);
             }
