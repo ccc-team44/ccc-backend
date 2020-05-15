@@ -40,7 +40,7 @@ export const langCount = async (req: Request, res: Response) => {
     res.json(data);
 };
 
-const handleDocs = async (db: any, docs: any[]) => {
+const handleDocs = async (classifiedDb: any, docs: any[]) => {
     return await Promise.all(docs.map(async doc=> {
         await axios.post("http://localhost:13000/predict", `{ "instances": [ { "tweet": "${doc.doc.text}" }] }`,{
             headers: { "Content-Type": "text/plain" }
@@ -49,7 +49,9 @@ const handleDocs = async (db: any, docs: any[]) => {
             if(highestScore!== undefined){
                 const index = res.data.predictions[0].scores.indexOf(highestScore)
                 const tweetClass =  res.data.predictions[0].classes[index]
-                return db.insert({...doc.doc, _id: doc.id, tweetClass}).catch(()=>{});
+                const newDoc = {...doc.doc, _id: doc.id, tweetClass}
+                delete newDoc._rev
+                return classifiedDb.insert(newDoc).catch(console.log);
             }
         });
 
@@ -77,7 +79,7 @@ export const stream = async (req: Request, res: Response) => {
         start_key_doc_id: undefined
     } as  any;
 
-    let i = 0;
+    // let i = 0;
     while(run)
     {
         if(startKey) {
@@ -93,9 +95,9 @@ export const stream = async (req: Request, res: Response) => {
               }
 
 
-
-              if(i > 0) run = false;
-              i+=1;
+              //
+              // if(i > 0) run = false;
+              // i+=1;
 
               return body.rows;
 
