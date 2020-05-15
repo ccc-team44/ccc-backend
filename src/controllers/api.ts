@@ -27,3 +27,15 @@ export const allCoordinates = async (req: Request, res: Response) => {
 
     res.json(data);
 };
+
+export const langCount = async (req: Request, res: Response) => {
+    const designId = "lang";
+    const viewId = "lang-count";
+    const data = await db.view(designId, viewId, {
+        group: true
+    }).then((body: {
+        rows: any[];
+    }) => body.rows).catch(console.log);
+
+    res.json(data);
+};
