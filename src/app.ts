@@ -31,6 +31,7 @@ app.get("/", homeController.index);
  */
 app.get("/api", apiController.getApi);
 app.get("/api/all-coordinates", apiController.allCoordinates);
+app.get("/api/lang-count", apiController.langCount);
 
 
 export default app;
