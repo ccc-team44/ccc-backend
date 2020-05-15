@@ -39,3 +39,35 @@ export const langCount = async (req: Request, res: Response) => {
 
     res.json(data);
 };
+
+export const stream = async (req: Request, res: Response) => {
+    let run = true;
+    let startKey;
+    const params = {
+        include_docs: true,
+        limit: 10
+    }
+    console.log(startKey)
+
+
+    let i = 0
+    while(run)
+    {
+        if(startKey) params.start_key_doc_id = startKey;
+        console.log(params)
+        await db.list(params)
+          .then(body => {
+              if(body.rows.length){
+                  startKey = body.rows[body.rows.length -1].id;
+                  console.log(startKey);
+              }
+              else{
+                  run = false;
+              }
+              i+=1;
+
+          });
+    }
+
+    res.json({});
+};
