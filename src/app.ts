@@ -4,11 +4,11 @@ import bodyParser from "body-parser";
 import path from "path";
 import * as homeController from "./controllers/home";
 import * as apiController from "./controllers/api";
-
+import cors from "cors";
 
 // Create Express server
 const app = express();
-
+app.use(cors());
 // Express configuration
 app.set("port", process.env.PORT || 8002);
 app.set("views", path.join(__dirname, "../views"));

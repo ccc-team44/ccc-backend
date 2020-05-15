@@ -1,8 +1,6 @@
 import errorHandler from "errorhandler";
 
 import app from "./app";
-import cors from "cors";
-app.use(cors())
 /**
  * Error Handler. Provides full stack - remove for production
  */
