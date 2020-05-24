@@ -35,6 +35,7 @@ app.get("/api/lang-count", apiController.langCount);
 app.get("/api/lang", apiController.lang);
 app.get("/api/scomo", apiController.scomo);
 app.get("/api/retweet", apiController.retweet);
+app.get("/api/scomo-location", apiController.scomoLocation);
 app.get("/api/stream", apiController.stream);
 
 

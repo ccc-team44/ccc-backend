@@ -40,9 +40,25 @@ export const langCount = async (req: Request, res: Response) => {
     res.json(data);
 };
 
+export const scomoLocation = async (req: Request, res: Response) => {
+    const designId = "scomo";
+    const viewId = "scomo";
+    const data = await db.view(designId, viewId, {
+        group: true
+    }).then((body: {
+        rows: any[];
+    }) => body.rows.filter((r: { value: number }) => r.value > 1).map((r: { key: any[]; value: any }) => ({
+        lng: r.key[1],
+        lat: r.key[0],
+        count: r.value
+    }))).catch(console.log);
+
+    res.json(data);
+};
+
 export const scomo = async (req: Request, res: Response) => {
     const dbId = "morrison_output";
-    const docId = "morrison";
+    const docId = "792eb77e25fcc87dd30f2b022fbd08f7";
     const data = await nano.use(dbId).get(docId).then((doc: any) => doc).catch(console.log);
     res.json(data);
 };
