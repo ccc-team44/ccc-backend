@@ -61,12 +61,6 @@ export const lang = async (req: Request, res: Response) => {
     res.json(data);
 };
 
-export const scomo = async (req: Request, res: Response) => {
-    const dbId = "morrison_output";
-    const docId = "morrison_output";
-    const data = await nano.use(dbId).get(docId).then((doc: any) => doc).catch(console.log);
-    res.json(data);
-};
 const handleDocs = async (classifiedDb: any, docs: any[]) => {
     return await Promise.all(docs.map(async doc=> {
         await axios.post("http://172.26.130.31:8502/predict", `{ "instances": [ { "tweet": "${doc.doc.text}" }] }`,{
