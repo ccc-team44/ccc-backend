@@ -32,6 +32,9 @@ app.get("/", homeController.index);
 app.get("/api", apiController.getApi);
 app.get("/api/all-coordinates", apiController.allCoordinates);
 app.get("/api/lang-count", apiController.langCount);
+app.get("/api/lang", apiController.lang);
+app.get("/api/scomo", apiController.scomo);
+app.get("/api/retweet", apiController.retweet);
 app.get("/api/stream", apiController.stream);
 
 
