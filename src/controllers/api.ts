@@ -58,7 +58,8 @@ export const scomoLocation = async (req: Request, res: Response) => {
 
 export const scomo = async (req: Request, res: Response) => {
     const dbId = "morrison_output";
-    const docId = "792eb77e25fcc87dd30f2b022fbd08f7";
+    // const docId = "792eb77e25fcc87dd30f2b022fbd08f7";
+    const docId = "morrison";
     const data = await nano.use(dbId).get(docId).then((doc: any) => doc).catch(console.log);
     res.json(data);
 };
